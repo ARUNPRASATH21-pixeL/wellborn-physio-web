@@ -3,8 +3,8 @@
 
 import axios from 'axios';
 
-// Base URL for backend API
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://wellborn-physio-website.onrender.com';
 
 // API endpoints
 export const API = {

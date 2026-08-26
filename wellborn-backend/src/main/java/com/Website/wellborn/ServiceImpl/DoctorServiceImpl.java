@@ -1,12 +1,7 @@
 package com.Website.wellborn.ServiceImpl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -17,27 +12,25 @@ import com.Website.wellborn.Dto.DoctorRespDto;
 import com.Website.wellborn.Entity.Doctors;
 import com.Website.wellborn.Repositery.DoctorRepositery;
 import com.Website.wellborn.Service.DoctorService;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepositery doctorRepository;
-
-    // =========================================================
-    // UPLOAD DIRECTORY
-    // =========================================================
-
-    private final Path uploadDirectory =
-            Paths.get("uploads", "doctors")
-                  .toAbsolutePath()
-                  .normalize();
+    private final Cloudinary cloudinary;
 
     // =========================================================
     // CONSTRUCTOR
     // =========================================================
 
-    public DoctorServiceImpl(DoctorRepositery doctorRepository) {
+    public DoctorServiceImpl(
+            DoctorRepositery doctorRepository,
+            Cloudinary cloudinary
+    ) {
         this.doctorRepository = doctorRepository;
+        this.cloudinary = cloudinary;
     }
 
     // =========================================================
@@ -87,19 +80,39 @@ public class DoctorServiceImpl implements DoctorService {
         );
 
         // =====================================================
-        // STATUS (SAFE PARSING FOR STRING OR BOOLEAN)
+        // STATUS
         // =====================================================
 
         if (request.getStatus() != null) {
-            String statusVal = String.valueOf(request.getStatus()).trim();
-            if (statusVal.equalsIgnoreCase("Active") || statusVal.equalsIgnoreCase("true")) {
+
+            String statusVal =
+                    String.valueOf(
+                            request.getStatus()
+                    ).trim();
+
+            if (
+                    statusVal.equalsIgnoreCase("Active")
+                    ||
+                    statusVal.equalsIgnoreCase("true")
+            ) {
+
                 doctor.setStatus(true);
-            } else if (statusVal.equalsIgnoreCase("Inactive") || statusVal.equalsIgnoreCase("false")) {
+
+            } else if (
+                    statusVal.equalsIgnoreCase("Inactive")
+                    ||
+                    statusVal.equalsIgnoreCase("false")
+            ) {
+
                 doctor.setStatus(false);
+
             } else {
+
                 doctor.setStatus(true);
             }
+
         } else {
+
             doctor.setStatus(true);
         }
 
@@ -107,11 +120,16 @@ public class DoctorServiceImpl implements DoctorService {
         // IMAGE
         // =====================================================
 
-        if (image != null && !image.isEmpty()) {
+        if (
+                image != null
+                &&
+                !image.isEmpty()
+        ) {
 
-            String imagePath = saveImage(image);
+            String imageUrl =
+                    uploadImage(image);
 
-            doctor.setImage(imagePath);
+            doctor.setImage(imageUrl);
 
         } else {
 
@@ -216,10 +234,26 @@ public class DoctorServiceImpl implements DoctorService {
         // =====================================================
 
         if (request.getStatus() != null) {
-            String statusVal = String.valueOf(request.getStatus()).trim();
-            if (statusVal.equalsIgnoreCase("Active") || statusVal.equalsIgnoreCase("true")) {
+
+            String statusVal =
+                    String.valueOf(
+                            request.getStatus()
+                    ).trim();
+
+            if (
+                    statusVal.equalsIgnoreCase("Active")
+                    ||
+                    statusVal.equalsIgnoreCase("true")
+            ) {
+
                 doctor.setStatus(true);
-            } else if (statusVal.equalsIgnoreCase("Inactive") || statusVal.equalsIgnoreCase("false")) {
+
+            } else if (
+                    statusVal.equalsIgnoreCase("Inactive")
+                    ||
+                    statusVal.equalsIgnoreCase("false")
+            ) {
+
                 doctor.setStatus(false);
             }
         }
@@ -228,19 +262,17 @@ public class DoctorServiceImpl implements DoctorService {
         // NEW IMAGE
         // =====================================================
 
-        if (image != null && !image.isEmpty()) {
+        if (
+                image != null
+                &&
+                !image.isEmpty()
+        ) {
 
-            // Delete old image
-            deleteOldImage(
-                    doctor.getImage()
-            );
-
-            // Save new image
-            String newImagePath =
-                    saveImage(image);
+            String newImageUrl =
+                    uploadImage(image);
 
             doctor.setImage(
-                    newImagePath
+                    newImageUrl
             );
         }
 
@@ -279,11 +311,6 @@ public class DoctorServiceImpl implements DoctorService {
                                         + doctorId
                         )
                 );
-
-        // Delete image
-        deleteOldImage(
-                doctor.getImage()
-        );
 
         // Delete database record
         doctorRepository.delete(doctor);
@@ -340,29 +367,29 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     // =========================================================
-    // SAVE IMAGE
+    // CLOUDINARY IMAGE UPLOAD
     // =========================================================
 
-    private String saveImage(
+    private String uploadImage(
             MultipartFile image
     ) {
 
         try {
 
             // =================================================
-            // CREATE DIRECTORY
+            // VALIDATE IMAGE
             // =================================================
 
-            if (!Files.exists(uploadDirectory)) {
+            if (
+                    image == null
+                    ||
+                    image.isEmpty()
+            ) {
 
-                Files.createDirectories(
-                        uploadDirectory
+                throw new IllegalArgumentException(
+                        "Doctor image is required."
                 );
             }
-
-            // =================================================
-            // ORIGINAL FILE NAME
-            // =================================================
 
             String originalFileName =
                     image.getOriginalFilename();
@@ -404,78 +431,50 @@ public class DoctorServiceImpl implements DoctorService {
             }
 
             // =================================================
-            // UNIQUE FILE NAME
+            // CLOUDINARY UPLOAD
             // =================================================
 
-            String fileName =
-                    UUID.randomUUID()
-                          + extension;
-
-            Path filePath =
-                    uploadDirectory
-                            .resolve(fileName)
-                            .normalize();
-
-            // =================================================
-            // SAVE FILE
-            // =================================================
-
-            Files.copy(
-                    image.getInputStream(),
-                    filePath,
-                    StandardCopyOption.REPLACE_EXISTING
-            );
+            Map<?, ?> uploadResult =
+                    cloudinary
+                            .uploader()
+                            .upload(
+                                    image.getBytes(),
+                                    ObjectUtils.asMap(
+                                            "folder",
+                                            "wellborn/doctors",
+                                            "resource_type",
+                                            "image"
+                                    )
+                            );
 
             // =================================================
-            // DATABASE PATH
+            // SECURE URL
             // =================================================
 
-            return "/uploads/doctors/" + fileName;
+            Object secureUrl =
+                    uploadResult.get(
+                            "secure_url"
+                    );
 
-        } catch (IOException e) {
+            if (secureUrl == null) {
+
+                throw new RuntimeException(
+                        "Cloudinary did not return an image URL."
+                );
+            }
+
+            return secureUrl.toString();
+
+        } catch (IllegalArgumentException e) {
+
+            throw e;
+
+        } catch (Exception e) {
 
             throw new RuntimeException(
                     "Doctor image upload failed",
                     e
             );
-        }
-    }
-
-    // =========================================================
-    // DELETE OLD IMAGE
-    // =========================================================
-
-    private void deleteOldImage(
-            String imagePath
-    ) {
-
-        if (
-                imagePath == null
-                ||
-                imagePath.trim().isEmpty()
-        ) {
-
-            return;
-        }
-
-        try {
-
-            String fileName =
-                    imagePath.substring(
-                            imagePath.lastIndexOf("/") + 1
-                    );
-
-            Path filePath =
-                    uploadDirectory
-                            .resolve(fileName)
-                            .normalize();
-
-            Files.deleteIfExists(
-                    filePath
-            );
-
-        } catch (Exception e) {
-            System.out.println("Old doctor image delete failed: " + e.getMessage());
         }
     }
 
@@ -523,8 +522,9 @@ public class DoctorServiceImpl implements DoctorService {
                 doctor.getImage()
         );
 
-        // Safely map boolean status back to DTO
-        response.setStatus(doctor.getStatus());
+        response.setStatus(
+                doctor.getStatus()
+        );
 
         response.setMessage(
                 message

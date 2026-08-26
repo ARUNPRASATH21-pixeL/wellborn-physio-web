@@ -4,8 +4,7 @@
 // ============================================================
 
 const BASE_URL =
-  
-  "http://localhost:8080";
+  "https://wellborn-physio-website.onrender.com";
 
 const normalizeBaseUrl = (url) =>
   String(url).replace(/\/+$/, "");
