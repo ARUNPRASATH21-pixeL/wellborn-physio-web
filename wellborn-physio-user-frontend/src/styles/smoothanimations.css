@@ -1,0 +1,214 @@
+/* =========================================================
+   WELLBORN PHYSIO
+   GLOBAL RESPONSIVE + SMOOTH ANIMATION SYSTEM
+========================================================= */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   GLOBAL PAGE
+========================================================= */
+
+.page,
+.user-page,
+.user-home,
+.user-about,
+.user-services,
+.user-contact,
+.user-appointment,
+.about-ios-page {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+}
+
+/* =========================================================
+   SMOOTH SECTION
+========================================================= */
+
+.smooth-section {
+  position: relative;
+  width: 100%;
+  overflow: clip;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.responsive-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 22px;
+  padding-right: 22px;
+}
+
+/* =========================================================
+   GPU OPTIMIZATION
+========================================================= */
+
+.motion-safe {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+[data-framer-component] {
+  backface-visibility: hidden;
+}
+
+/* =========================================================
+   IMAGES
+========================================================= */
+
+img {
+  max-width: 100%;
+}
+
+img,
+video {
+  transform: translateZ(0);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+
+  .responsive-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 70px;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .responsive-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /*
+     Reduce expensive visual effects
+     on mobile for smoother scrolling.
+  */
+
+  .glass,
+  .glass-card,
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /*
+     GPU acceleration
+  */
+
+  .motion-safe,
+  .glass,
+  .glass-card,
+  img {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .responsive-container {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+}
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+  /*
+     Disable desktop hover transformations
+     on mobile.
+  */
+
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-card:hover {
+    transform: none !important;
+  }
+
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+}

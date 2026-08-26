@@ -1,0 +1,1177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  scroll-behavior: smooth;
+
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background: #ffffff;
+  color: #1f2937;
+
+  font-family: "Poppins", sans-serif;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: none;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================================================
+   RESPONSIVE SAFETY
+========================================================= */
+
+html,
+body,
+#root {
+  max-width: 100vw;
+}
+
+section,
+main,
+header,
+footer,
+nav,
+article,
+aside,
+div {
+  max-width: 100%;
+}
+
+table {
+  max-width: 100%;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+p,
+span,
+a,
+button,
+label {
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   LIGHT THEME
+========================================================= */
+
+body {
+  background: #ffffff;
+  color: #1f2937;
+}
+
+/* =========================================================
+   DARK THEME
+========================================================= */
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background: #020617;
+  color: #f8fafc;
+}
+
+/* =========================================================
+   DARK MODE - BACKGROUNDS
+========================================================= */
+
+html.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+html.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-gray-200 {
+  background-color: #334155 !important;
+}
+
+/* =========================================================
+   DARK MODE - TEXT
+========================================================= */
+
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-gray-700 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+/* =========================================================
+   DARK MODE - BORDERS
+========================================================= */
+
+html.dark .border,
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-300 {
+  border-color: #475569 !important;
+}
+
+/* =========================================================
+   DARK MODE - FORMS
+========================================================= */
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #94a3b8;
+}
+
+html.dark option {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+/* =========================================================
+   USER PAGE
+========================================================= */
+
+.user-page,
+.user-section,
+.user-container,
+.user-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.user-page {
+  min-height: 100%;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+html.dark .user-page,
+html.dark .user-section,
+html.dark .user-container,
+html.dark .user-card {
+  color: #f8fafc;
+}
+
+/* =========================================================
+   USER SHELL
+========================================================= */
+
+.user-shell {
+  width: 100%;
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+  overflow-y: visible;
+
+  background: #f6f9fd;
+  color: #0f172a;
+}
+
+.dark .user-shell {
+  background: #020617;
+  color: #f8fafc;
+}
+
+.user-main {
+  width: 100%;
+  overflow: visible;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================================
+   NAVBAR GLOBAL
+========================================================= */
+
+nav {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+
+  z-index: 100;
+}
+
+/* =========================================================
+   MOBILE NAVBAR SAFETY
+========================================================= */
+
+@media (max-width: 1023px) {
+  nav {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  nav button {
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE NAVBAR
+========================================================= */
+
+@media (max-width: 480px) {
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  nav {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  nav img {
+    object-fit: cover;
+  }
+
+  nav .flex {
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   EXTRA SMALL DEVICE SAFETY
+========================================================= */
+
+@media (max-width: 360px) {
+  nav .flex {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 300px) {
+  nav p {
+    display: none;
+  }
+}
+
+/* =========================================================
+   USER MOBILE MENU
+========================================================= */
+
+.user-mobile-toggle,
+.admin-mobile-toggle {
+  display: none;
+}
+
+.user-mobile-menu {
+  display: none;
+}
+
+/* =========================================================
+   MOBILE MENU BREAKPOINT
+========================================================= */
+
+@media (max-width: 1023px) {
+  .user-mobile-toggle,
+  .admin-mobile-toggle {
+    display: flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+  }
+
+  .user-mobile-menu {
+    display: none;
+
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    max-width: 100%;
+
+    z-index: 110;
+  }
+
+  .user-mobile-menu.open {
+    display: block;
+  }
+
+  .user-mobile-menu a {
+    width: 100%;
+    max-width: 100%;
+
+    overflow: hidden;
+  }
+}
+
+/* =========================================================
+   DESKTOP SIDEBAR -> MOBILE
+========================================================= */
+
+@media (max-width: 1023px) {
+  .fixed.left-0.top-0.w-64 {
+    transform: translateX(-100%);
+
+    transition:
+      transform 0.25s ease,
+      opacity 0.25s ease;
+
+    z-index: 60;
+  }
+
+  .fixed.left-0.top-0.w-64.mobile-open {
+    transform: translateX(0);
+  }
+
+  .ml-64 {
+    margin-left: 0 !important;
+  }
+}
+
+/* =========================================================
+   MOBILE SIDEBAR BACKDROP
+========================================================= */
+
+@media (max-width: 1023px) {
+  .mobile-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+
+    z-index: 50;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+}
+
+/* =========================================================
+   HERO RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  h1 {
+    max-width: 100%;
+
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+}
+
+/* =========================================================
+   MOBILE HEADINGS
+========================================================= */
+
+@media (max-width: 480px) {
+  h1 {
+    line-height: 1.2;
+
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  h2 {
+    line-height: 1.25;
+
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  h3 {
+    line-height: 1.3;
+  }
+}
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+@media (max-width: 480px) {
+  a,
+  button {
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   ABOUT IMAGE
+========================================================= */
+
+@media (max-width: 480px) {
+  .about-float {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    height: 280px !important;
+
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-float {
+    height: 240px !important;
+  }
+}
+
+@media (max-width: 300px) {
+  .about-float {
+    height: 210px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE GRID
+========================================================= */
+
+@media (max-width: 480px) {
+  .grid-cols-2 {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+@media (max-width: 480px) {
+  .grid-cols-2 h2 {
+    font-size: 32px !important;
+    line-height: 1.1 !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .grid-cols-2 h2 {
+    font-size: 28px !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 300px) {
+  .grid-cols-2 {
+    gap: 15px !important;
+  }
+
+  .grid-cols-2 h2 {
+    font-size: 24px !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 10px !important;
+  }
+}
+
+/* =========================================================
+   ABOUT CARDS
+========================================================= */
+
+@media (max-width: 480px) {
+  .about-card {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 22px !important;
+  }
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+  width: 100%;
+  max-width: 100%;
+
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  footer h2 {
+    font-size: 21px !important;
+    line-height: 30px !important;
+  }
+
+  footer p,
+  footer a {
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+/* =========================================================
+   WHATSAPP FLOAT
+========================================================= */
+
+@media (max-width: 480px) {
+  .group {
+    right: 15px !important;
+    bottom: 15px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .group > div {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .group i {
+    font-size: 27px !important;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE FORMS
+========================================================= */
+
+input,
+textarea,
+select {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  input,
+  textarea,
+  select {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE FLEX
+========================================================= */
+
+@media (max-width: 480px) {
+  .flex {
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   PAGE TRANSITION
+========================================================= */
+
+.wellborn-page-transition {
+  min-height: 100vh;
+
+  animation:
+    premium-page-enter
+    0.8s
+    cubic-bezier(.16, 1, .3, 1)
+    both;
+}
+
+@keyframes premium-page-enter {
+  0% {
+    opacity: 0;
+
+    transform:
+      scale(.98)
+      translateY(8px);
+
+    filter: blur(3px);
+  }
+
+  60% {
+    opacity: .8;
+
+    transform:
+      scale(1.005)
+      translateY(2px);
+
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      translateY(0);
+
+    filter: blur(0);
+  }
+}
+
+/* =========================================================
+   ONE NORMAL PAGE SCROLLBAR
+========================================================= */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 999px;
+}
+
+html.dark::-webkit-scrollbar-thumb,
+body.dark::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* Firefox */
+
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
+
+html.dark,
+html.dark body {
+  scrollbar-color: #475569 transparent;
+}
+
+/* =========================================================
+   IMPORTANT:
+   DO NOT CREATE A SECOND PAGE SCROLLER
+========================================================= */
+
+/*
+  Never use these on:
+    #root
+    .user-shell
+    .user-page
+    .user-main
+    main
+
+  overflow-y: auto;
+  overflow-y: scroll;
+  height: 100vh;
+  max-height: 100vh;
+*/
+
+/* =========================================================
+   MENU / MODAL LOCK
+========================================================= */
+
+html.wellborn-lock,
+body.wellborn-lock {
+  overflow: hidden !important;
+}
+
+body.wellborn-lock {
+  touch-action: none;
+}
+
+/* =========================================================
+   MOBILE MENU INTERNAL SCROLL
+========================================================= */
+
+.mobile-menu-panel {
+  overscroll-behavior: contain;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-menu-panel::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================================================
+   APPOINTMENT MODAL INTERNAL SCROLL
+========================================================= */
+
+.appointment-modal {
+  overscroll-behavior: contain;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.appointment-modal::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================================================
+   SMOOTH ANCHOR SCROLL
+========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+a[href^="#"] {
+  scroll-behavior: smooth;
+}
+
+/* =========================================================
+   IOS / TOUCH OPTIMIZATION
+========================================================= */
+
+body,
+.user-shell,
+.user-page {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 481px) and (max-width: 1023px) {
+  nav img {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 1024px) {
+  nav {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   FINAL MOBILE SAFETY
+========================================================= */
+
+@media (max-width: 480px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: hidden;
+  }
+
+  nav > div {
+    max-width: 100%;
+  }
+}
+/* =========================================================
+   USER SHELL MOBILE NAVBAR
+   SMALL COMPACT NAV - NOT FULL SCREEN
+   ========================================================= */
+
+@media (max-width: 1023px) {
+
+  /* Main navbar */
+  .user-shell nav {
+    position: fixed !important;
+
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+
+    width: auto !important;
+    max-width: fit-content !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    z-index: 9999 !important;
+
+    background: transparent !important;
+
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Navbar inner wrapper */
+  .user-shell nav > div {
+    width: auto !important;
+    max-width: fit-content !important;
+
+    margin: 0 !important;
+    padding: 6px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 5px !important;
+
+    border-radius: 12px !important;
+
+    box-shadow:
+      0 6px 20px rgba(15, 23, 42, 0.12) !important;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Hide desktop navigation */
+  .user-shell nav .desktop-menu,
+  .user-shell nav .nav-links {
+    display: none !important;
+  }
+
+  /* Hide logo / brand on mobile */
+  .user-shell nav img {
+    display: none !important;
+  }
+
+  .user-shell nav .logo,
+  .user-shell nav .brand,
+  .user-shell nav .navbar-logo {
+    display: none !important;
+  }
+
+  /* Mobile buttons */
+  .user-shell nav .user-mobile-toggle,
+  .user-shell nav button {
+    width: 38px !important;
+    height: 38px !important;
+
+    min-width: 38px !important;
+    min-height: 38px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 9px !important;
+  }
+
+  /* Menu icon */
+  .user-shell nav .user-mobile-toggle {
+    font-size: 18px !important;
+  }
+
+  /* Theme toggle */
+  .user-shell nav button {
+    flex-shrink: 0 !important;
+  }
+
+  /* Mobile menu itself */
+  .user-shell .user-mobile-menu {
+    position: fixed !important;
+
+    top: 68px !important;
+    left: 12px !important;
+    right: 12px !important;
+
+    width: auto !important;
+    max-width: none !important;
+
+    border-radius: 14px !important;
+
+    overflow: hidden !important;
+
+    z-index: 9998 !important;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .user-shell nav {
+    top: 10px !important;
+    right: 10px !important;
+  }
+
+  .user-shell nav > div {
+    padding: 5px !important;
+    gap: 4px !important;
+
+    border-radius: 11px !important;
+  }
+
+  .user-shell nav .user-mobile-toggle,
+  .user-shell nav button {
+    width: 36px !important;
+    height: 36px !important;
+
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+
+  .user-shell .user-mobile-menu {
+    top: 62px !important;
+    left: 10px !important;
+    right: 10px !important;
+
+    border-radius: 12px !important;
+  }
+}
+/* =========================================================
+   WELLBORN GLOBAL SMOOTH SCROLL
+========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   SCROLL REVEAL BASE
+========================================================= */
+
+.wellborn-reveal {
+  opacity: 0;
+
+  transition:
+    opacity var(--reveal-duration)
+      cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--reveal-duration)
+      cubic-bezier(0.22, 1, 0.36, 1);
+
+  transition-delay: var(--reveal-delay);
+
+  will-change: opacity, transform;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+.wellborn-reveal-up {
+  transform: translateY(45px);
+}
+
+.wellborn-reveal-down {
+  transform: translateY(-45px);
+}
+
+.wellborn-reveal-left {
+  transform: translateX(-50px);
+}
+
+.wellborn-reveal-right {
+  transform: translateX(50px);
+}
+
+.wellborn-reveal-scale {
+  transform: scale(0.92);
+}
+
+.wellborn-reveal-fade {
+  transform: none;
+}
+
+/* =========================================================
+   VISIBLE
+========================================================= */
+
+.wellborn-reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  .wellborn-reveal-up {
+    transform: translateY(28px);
+  }
+
+  .wellborn-reveal-down {
+    transform: translateY(-28px);
+  }
+
+  .wellborn-reveal-left {
+    transform: translateX(-28px);
+  }
+
+  .wellborn-reveal-right {
+    transform: translateX(28px);
+  }
+
+  .wellborn-reveal-scale {
+    transform: scale(0.96);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .wellborn-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

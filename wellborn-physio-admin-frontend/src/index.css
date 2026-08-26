@@ -1,0 +1,1985 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+
+html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #f5f7fb;
+  color: #1e293b;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* =========================================================
+   ADMIN SHELL
+========================================================= */
+
+.admin-shell {
+  min-height: 100vh;
+  width: 100%;
+  background: #f5f7fb;
+  color: #1e293b;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.admin-shell.dark {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* =========================================================
+   ADMIN NAVBAR
+========================================================= */
+
+.admin-navbar {
+  width: 100%;
+  min-height: 85px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 10px 30px;
+
+  background: #2446b8;
+  color: white;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.15);
+
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* =========================================================
+   ADMIN BRAND
+========================================================= */
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+}
+
+.admin-brand-logo {
+  width: 58px;
+  height: 58px;
+
+  object-fit: cover;
+
+  border-radius: 14px;
+
+  background: white;
+  padding: 3px;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.admin-brand:hover .admin-brand-logo {
+  transform: scale(1.04);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.admin-brand-text {
+  min-width: 0;
+}
+
+.admin-brand-text h2 {
+  margin: 0;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.1;
+
+  white-space: nowrap;
+}
+
+.admin-brand-text p {
+  margin: 4px 0 0;
+
+  font-size: 12px;
+  color: #dbeafe;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   THEME BUTTON
+========================================================= */
+
+.admin-theme-button {
+  width: 45px;
+  height: 45px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: white;
+  color: #1d4ed8;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  margin-left: 18px;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.admin-theme-button:hover {
+  transform: translateY(-2px) scale(1.04);
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.admin-theme-button:active {
+  transform: scale(0.94);
+}
+
+.admin-shell.dark .admin-theme-button {
+  background: #1e293b;
+  color: #facc15;
+
+  border: 1px solid #475569;
+}
+
+/* =========================================================
+   DESKTOP NAV OPTIONS
+========================================================= */
+
+.admin-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  flex: 1;
+
+  margin-left: 100px;
+  margin-right: 20px;
+
+  overflow-x: auto;
+
+  scrollbar-width: none;
+}
+
+.admin-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 11px 13px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+  color: white;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.admin-nav-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+
+  transform: translateY(-1px);
+}
+
+.admin-nav-link.active {
+  background: #3267e8;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
+
+.admin-mobile-menu {
+  display: none;
+
+  width: 43px;
+  height: 43px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-mobile-menu:hover {
+  background: rgba(255, 255, 255, 0.25);
+
+  transform: scale(1.04);
+}
+
+.admin-mobile-menu:active {
+  transform: scale(0.94);
+}
+
+/* =========================================================
+   MOBILE MENU PANEL
+========================================================= */
+
+.admin-mobile-panel {
+  display: none;
+}
+
+/* =========================================================
+   ADMIN PAGE CONTENT
+========================================================= */
+
+.admin-page-content {
+  width: 100%;
+  min-height: calc(100vh - 85px);
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+.admin-shell.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.admin-shell.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.admin-shell.dark .bg-gray-100 {
+  background-color: #334155 !important;
+}
+
+.admin-shell.dark .bg-gray-200 {
+  background-color: #475569 !important;
+}
+
+.admin-shell.dark .text-gray-900,
+.admin-shell.dark .text-gray-800,
+.admin-shell.dark .text-gray-700 {
+  color: #f1f5f9 !important;
+}
+
+.admin-shell.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.admin-shell.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.admin-shell.dark .border,
+.admin-shell.dark .border-gray-200,
+.admin-shell.dark .border-gray-300 {
+  border-color: #475569 !important;
+}
+
+.admin-shell.dark input,
+.admin-shell.dark textarea,
+.admin-shell.dark select {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.admin-shell.dark input::placeholder,
+.admin-shell.dark textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* =========================================================
+   TABLET <= 1100px
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .admin-navbar {
+    padding: 10px 18px;
+  }
+
+  .admin-brand-text h2 {
+    font-size: 18px;
+  }
+
+  .admin-brand-logo {
+    width: 52px;
+    height: 52px;
+  }
+
+  .admin-theme-button {
+    width: 43px;
+    height: 43px;
+
+    margin-left: 14px;
+  }
+
+  .admin-nav-links {
+    margin-left: 50px;
+    margin-right: 15px;
+
+    justify-content: center;
+
+    gap: 3px;
+  }
+
+  .admin-nav-link {
+    padding: 10px 9px;
+
+    font-size: 12px;
+  }
+
+  .admin-nav-link svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* =========================================================
+   MOBILE <= 768px
+
+   LEFT  = BRAND
+   RIGHT = THEME + MENU
+========================================================= */
+
+@media (max-width: 768px) {
+
+  /* =====================================================
+     NAVBAR
+  ===================================================== */
+
+  .admin-navbar {
+    width: 100%;
+
+    min-height: 72px;
+    height: 72px;
+
+    padding: 0 10px;
+
+    display: flex;
+    align-items: center;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
+
+    overflow: hidden;
+  }
+
+  /* =====================================================
+     BRAND - LEFT
+  ===================================================== */
+
+  .admin-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex: 1 1 auto;
+    min-width: 0;
+
+    overflow: hidden;
+  }
+
+  .admin-brand-logo {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 11px;
+
+    flex: 0 0 46px;
+  }
+
+  .admin-brand-text {
+    min-width: 0;
+
+    overflow: hidden;
+  }
+
+  .admin-brand-text h2 {
+    font-size: 16px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-brand-text p {
+    font-size: 9px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* =====================================================
+     DESKTOP NAV - HIDE
+  ===================================================== */
+
+  .admin-nav-links {
+    display: none !important;
+  }
+
+  /* =====================================================
+     THEME BUTTON - EXTREME RIGHT
+  ===================================================== */
+
+  .admin-theme-button {
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+
+    margin: 0 0 0 auto;
+
+    border-radius: 9px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* =====================================================
+     MOBILE MENU - NEXT TO THEME
+  ===================================================== */
+
+  .admin-mobile-menu {
+    display: flex;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
+
+    margin: 0 0 0 6px;
+
+    border-radius: 9px;
+
+    flex: 0 0 40px;
+
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* =====================================================
+     MOBILE PANEL
+  ===================================================== */
+
+  .admin-mobile-panel {
+    position: fixed;
+
+    top: 72px;
+
+    left: 8px;
+    right: 8px;
+
+    width: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 10px;
+
+    background: #2446b8;
+
+    border-radius: 0 0 14px 14px;
+
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, 0.2);
+
+    z-index: 999;
+
+    transform: translateY(-120%);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .admin-shell.dark .admin-mobile-panel {
+    background: #172554;
+  }
+
+  .admin-mobile-panel.open {
+    transform: translateY(0);
+
+    opacity: 1;
+
+    pointer-events: auto;
+  }
+
+  /* =====================================================
+     MOBILE LINKS
+  ===================================================== */
+
+  .admin-mobile-link {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    padding: 13px 15px;
+
+    margin-bottom: 3px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+      background-color 0.25s ease,
+      transform 0.2s ease;
+  }
+
+  .admin-mobile-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+
+    transform: translateX(3px);
+  }
+
+  .admin-mobile-link.active {
+    background: #3267e8;
+
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  /* =====================================================
+     PAGE CONTENT
+  ===================================================== */
+
+  .admin-page-content {
+    width: 100%;
+
+    min-height:
+      calc(100vh - 72px);
+  }
+
+  /* =====================================================
+     OLD SIDEBAR RESPONSIVE FIX
+  ===================================================== */
+
+  .ml-64 {
+    margin-left: 0 !important;
+  }
+
+  .fixed.left-0.top-0.w-64 {
+    transform: translateX(-100%);
+
+    transition:
+      transform 0.25s ease;
+
+    z-index: 60;
+  }
+
+  .fixed.left-0.top-0.w-64.mobile-open {
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE <= 480px
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .admin-navbar {
+    width: 100%;
+
+    height: 68px;
+    min-height: 68px;
+
+    padding: 0 8px;
+  }
+
+  /* =====================================================
+     BRAND
+  ===================================================== */
+
+  .admin-brand {
+    gap: 7px;
+
+    min-width: 0;
+  }
+
+  .admin-brand-logo {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    border-radius: 10px;
+  }
+
+  .admin-brand-text h2 {
+    font-size: 14px;
+  }
+
+  .admin-brand-text p {
+    font-size: 8px;
+  }
+
+  /* =====================================================
+     RIGHT CONTROLS
+  ===================================================== */
+
+  .admin-theme-button {
+    width: 38px;
+    height: 38px;
+
+    margin: 0 0 0 auto;
+
+    flex: 0 0 38px;
+
+    border-radius: 9px;
+  }
+
+  .admin-mobile-menu {
+    width: 38px;
+    height: 38px;
+
+    margin: 0 0 0 5px;
+
+    flex: 0 0 38px;
+
+    border-radius: 9px;
+  }
+
+  /* =====================================================
+     MOBILE PANEL
+  ===================================================== */
+
+  .admin-mobile-panel {
+    top: 68px;
+
+    left: 6px;
+    right: 6px;
+
+    padding: 9px;
+  }
+
+  .admin-mobile-link {
+    padding: 12px 13px;
+
+    font-size: 13px;
+  }
+
+  /* =====================================================
+     PAGE CONTENT
+  ===================================================== */
+
+  .admin-page-content {
+    min-height:
+      calc(100vh - 68px);
+  }
+
+  /* =====================================================
+     GENERAL
+  ===================================================== */
+
+  nav {
+    height: auto;
+  }
+
+  nav img {
+    max-width: 100%;
+  }
+
+  section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  h1 {
+    word-break: normal;
+
+    overflow-wrap: break-word;
+  }
+
+  a {
+    max-width: 100%;
+  }
+
+  /* =====================================================
+     ABOUT FLOAT IMAGE
+  ===================================================== */
+
+  .about-float {
+    width: 100% !important;
+
+    height: 280px !important;
+
+    object-fit: cover;
+  }
+
+  /* =====================================================
+     STATS
+  ===================================================== */
+
+  .grid-cols-2 {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-cols-2 h2 {
+    font-size: 32px !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 13px;
+  }
+
+  /* =====================================================
+     ABOUT CARDS
+  ===================================================== */
+
+  .about-card {
+    width: 100%;
+
+    padding: 22px !important;
+  }
+
+  /* =====================================================
+     FOOTER
+  ===================================================== */
+
+  footer {
+    width: 100%;
+
+    overflow: hidden;
+  }
+
+  footer h2 {
+    font-size: 21px !important;
+
+    line-height: 30px;
+  }
+
+  footer p,
+  footer a {
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* =====================================================
+     WHATSAPP
+  ===================================================== */
+
+  .group {
+    right: 15px !important;
+
+    bottom: 15px !important;
+  }
+}
+
+/* =========================================================
+   EXTRA SMALL <= 360px
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .admin-navbar {
+    width: 100%;
+
+    height: 64px;
+    min-height: 64px;
+
+    padding: 0 7px;
+  }
+
+  /* =====================================================
+     HIDE BRAND TEXT
+  ===================================================== */
+
+  .admin-brand-text {
+    display: none;
+  }
+
+  .admin-brand-logo {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+  }
+
+  /* =====================================================
+     RIGHT ICONS
+  ===================================================== */
+
+  .admin-theme-button {
+    width: 37px;
+    height: 37px;
+
+    margin: 0 0 0 auto;
+
+    flex: 0 0 37px;
+  }
+
+  .admin-mobile-menu {
+    width: 37px;
+    height: 37px;
+
+    margin: 0 0 0 5px;
+
+    flex: 0 0 37px;
+  }
+
+  /* =====================================================
+     PANEL
+  ===================================================== */
+
+  .admin-mobile-panel {
+    top: 64px;
+  }
+
+  .admin-page-content {
+    min-height:
+      calc(100vh - 64px);
+  }
+
+  /* =====================================================
+     HERO
+  ===================================================== */
+
+  .pt-28 {
+    padding-top: 95px !important;
+  }
+
+  h1 {
+    font-size: 30px !important;
+
+    line-height: 38px !important;
+  }
+
+  p {
+    overflow-wrap: break-word;
+  }
+
+  h2 {
+    font-size: 28px !important;
+
+    line-height: 36px !important;
+  }
+
+  .about-float {
+    height: 240px !important;
+  }
+
+  .grid-cols-2 h2 {
+    font-size: 28px !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 11px !important;
+  }
+
+  /* =====================================================
+     WHATSAPP
+  ===================================================== */
+
+  .group > div {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .group i {
+    font-size: 27px !important;
+  }
+}
+
+/* =========================================================
+   VERY SMALL <= 300px
+========================================================= */
+
+@media (max-width: 300px) {
+
+  .admin-navbar {
+    padding: 0 6px;
+  }
+
+  .admin-brand-text {
+    display: none;
+  }
+
+  .admin-brand-logo {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+  }
+
+  /* =====================================================
+     THEME
+  ===================================================== */
+
+  .admin-theme-button {
+    width: 34px;
+    height: 34px;
+
+    margin: 0 0 0 auto;
+
+    flex: 0 0 34px;
+  }
+
+  /* =====================================================
+     MOBILE MENU
+  ===================================================== */
+
+  .admin-mobile-menu {
+    width: 34px;
+    height: 34px;
+
+    margin: 0 0 0 4px;
+
+    flex: 0 0 34px;
+  }
+
+  /* =====================================================
+     HERO
+  ===================================================== */
+
+  h1 {
+    font-size: 25px !important;
+
+    line-height: 32px !important;
+  }
+
+  h2 {
+    font-size: 24px !important;
+
+    line-height: 31px !important;
+  }
+
+  .about-float {
+    height: 210px !important;
+  }
+
+  .grid-cols-2 {
+    gap: 15px !important;
+  }
+
+  .grid-cols-2 h2 {
+    font-size: 24px !important;
+  }
+
+  .grid-cols-2 p {
+    font-size: 10px !important;
+  }
+}
+/* =========================================================
+   WELLBORN ADMIN - MOBILE RIGHT CONTROLS
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .wellborn-admin-navbar-inner {
+    width: 100% !important;
+
+    display: grid !important;
+
+    grid-template-columns: 1fr auto !important;
+
+    align-items: center !important;
+
+    padding: 0 10px !important;
+  }
+
+  /* LEFT */
+  .wellborn-admin-brand {
+    justify-self: start !important;
+
+    min-width: 0 !important;
+  }
+
+  /* HIDE DESKTOP NAV */
+  .wellborn-admin-nav {
+    display: none !important;
+  }
+
+  /* RIGHT */
+  .wellborn-admin-controls {
+    justify-self: end !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: flex-end !important;
+
+    gap: 5px !important;
+
+    margin: 0 !important;
+
+    width: auto !important;
+  }
+
+  /* THEME */
+  .wellborn-theme-button {
+    width: 40px !important;
+    height: 40px !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    flex: 0 0 40px !important;
+  }
+
+  /* MENU */
+  .wellborn-mobile-menu-button {
+    display: flex !important;
+
+    width: 40px !important;
+    height: 40px !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    flex: 0 0 40px !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .wellborn-admin-navbar-inner {
+    padding: 0 8px !important;
+  }
+
+  .wellborn-admin-controls {
+    gap: 4px !important;
+  }
+
+  .wellborn-theme-button,
+  .wellborn-mobile-menu-button {
+    width: 38px !important;
+    height: 38px !important;
+
+    flex: 0 0 38px !important;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .wellborn-admin-navbar-inner {
+    padding: 0 6px !important;
+  }
+
+  .wellborn-theme-button,
+  .wellborn-mobile-menu-button {
+    width: 36px !important;
+    height: 36px !important;
+
+    flex: 0 0 36px !important;
+  }
+
+  .wellborn-admin-brand-text {
+    display: none !important;
+  }
+}
+/* =========================================================
+   WELLBORN ADMIN — PREMIUM VISUAL UPGRADE
+   Add BELOW your existing CSS
+========================================================= */
+
+/* =========================================================
+   PREMIUM DESIGN TOKENS
+========================================================= */
+
+:root {
+  --wb-primary: #2446b8;
+  --wb-primary-dark: #19358f;
+  --wb-primary-light: #3267e8;
+  --wb-accent: #60a5fa;
+
+  --wb-glass: rgba(255, 255, 255, 0.10);
+  --wb-glass-border: rgba(255, 255, 255, 0.16);
+
+  --wb-shadow-soft:
+    0 8px 30px rgba(15, 23, 42, 0.10);
+
+  --wb-shadow-premium:
+    0 14px 40px rgba(15, 23, 42, 0.16);
+
+  --wb-transition:
+    260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* =========================================================
+   ADMIN SHELL PREMIUM
+========================================================= */
+
+.admin-shell {
+  position: relative;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(59, 130, 246, 0.06),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(37, 99, 235, 0.05),
+      transparent 30%
+    ),
+    #f5f7fb;
+}
+
+
+/* =========================================================
+   PREMIUM NAVBAR
+========================================================= */
+
+.admin-navbar {
+  background:
+    linear-gradient(
+      135deg,
+      #19358f 0%,
+      #2446b8 45%,
+      #2857d4 100%
+    );
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.14);
+
+  box-shadow:
+    0 8px 25px rgba(30, 64, 175, 0.18),
+    0 2px 8px rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   NAVBAR LIGHT GLOW
+========================================================= */
+
+.admin-navbar::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  top: -260px;
+  left: 18%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.12),
+      transparent 68%
+    );
+
+  pointer-events: none;
+
+  animation:
+    wb-navbar-glow 7s ease-in-out infinite;
+}
+
+.admin-navbar::after {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -150px;
+  bottom: -230px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(96, 165, 250, 0.20),
+      transparent 68%
+    );
+
+  pointer-events: none;
+
+  animation:
+    wb-navbar-glow-right 9s ease-in-out infinite;
+}
+
+@keyframes wb-navbar-glow {
+  0%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+
+  50% {
+    transform: translateX(90px) scale(1.15);
+  }
+}
+
+@keyframes wb-navbar-glow-right {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-60px, -30px);
+  }
+}
+
+
+/* =========================================================
+   KEEP NAVBAR CONTENT ABOVE EFFECTS
+========================================================= */
+
+.admin-navbar > * {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* =========================================================
+   PREMIUM BRAND
+========================================================= */
+
+.admin-brand {
+  position: relative;
+
+  padding: 5px 8px 5px 5px;
+
+  border-radius: 16px;
+
+  transition:
+    transform var(--wb-transition),
+    background-color var(--wb-transition);
+}
+
+.admin-brand:hover {
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LOGO PREMIUM
+========================================================= */
+
+.admin-brand-logo {
+  position: relative;
+
+  border:
+    2px solid rgba(255, 255, 255, 0.70);
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.05);
+
+  transition:
+    transform var(--wb-transition),
+    box-shadow var(--wb-transition),
+    border-color var(--wb-transition);
+}
+
+.admin-brand:hover .admin-brand-logo {
+  transform:
+    scale(1.06)
+    rotate(-1deg);
+
+  border-color:
+    rgba(255, 255, 255, 0.95);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.22),
+    0 0 25px rgba(96, 165, 250, 0.28);
+}
+
+
+/* =========================================================
+   BRAND TEXT
+========================================================= */
+
+.admin-brand-text h2 {
+  letter-spacing: -0.35px;
+
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.16);
+}
+
+.admin-brand-text p {
+  opacity: 0.88;
+
+  letter-spacing: 0.25px;
+}
+
+
+/* =========================================================
+   PREMIUM DESKTOP NAV
+========================================================= */
+
+.admin-nav-links {
+  position: relative;
+
+  padding: 4px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 15px;
+
+  background:
+    rgba(255, 255, 255, 0.045);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+
+/* =========================================================
+   NAV LINK
+========================================================= */
+
+.admin-nav-link {
+  position: relative;
+
+  border:
+    1px solid transparent;
+
+  transition:
+    background-color var(--wb-transition),
+    transform var(--wb-transition),
+    box-shadow var(--wb-transition),
+    border-color var(--wb-transition);
+}
+
+.admin-nav-link:hover {
+  background:
+    rgba(255, 255, 255, 0.10);
+
+  border-color:
+    rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   ACTIVE NAV
+========================================================= */
+
+.admin-nav-link.active {
+  position: relative;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(255, 255, 255, 0.08)
+    );
+
+  border:
+    1px solid rgba(255, 255, 255, 0.14);
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+.admin-nav-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 18%;
+  right: 18%;
+  bottom: 3px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #93c5fd,
+      transparent
+    );
+
+  box-shadow:
+    0 0 10px rgba(147, 197, 253, 0.65);
+}
+
+
+/* =========================================================
+   NAV ICON MICRO ANIMATION
+========================================================= */
+
+.admin-nav-link svg {
+  transition:
+    transform var(--wb-transition);
+}
+
+.admin-nav-link:hover svg {
+  transform:
+    translateY(-1px)
+    scale(1.08);
+}
+
+.admin-nav-link.active svg {
+  filter:
+    drop-shadow(
+      0 0 5px rgba(191, 219, 254, 0.45)
+    );
+}
+
+
+/* =========================================================
+   PREMIUM THEME BUTTON
+========================================================= */
+
+.admin-theme-button {
+  position: relative;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.20);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(239, 246, 255, 0.94)
+    );
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  overflow: hidden;
+}
+
+.admin-theme-button::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.60),
+      transparent 75%
+    );
+
+  transform:
+    translateX(-120%);
+
+  transition:
+    transform 500ms ease;
+}
+
+.admin-theme-button:hover::before {
+  transform:
+    translateX(120%);
+}
+
+.admin-theme-button:hover {
+  transform:
+    translateY(-2px)
+    scale(1.05);
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.20),
+    0 0 18px rgba(96, 165, 250, 0.18);
+}
+
+
+/* =========================================================
+   MOBILE MENU PREMIUM
+========================================================= */
+
+.admin-mobile-menu {
+  border:
+    1px solid rgba(255, 255, 255, 0.18);
+
+  background:
+    rgba(255, 255, 255, 0.10);
+
+  backdrop-filter:
+    blur(12px);
+
+  -webkit-backdrop-filter:
+    blur(12px);
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.10);
+}
+
+.admin-mobile-menu:hover {
+  background:
+    rgba(255, 255, 255, 0.18);
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.16);
+}
+
+
+/* =========================================================
+   MOBILE PANEL PREMIUM
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .admin-mobile-panel {
+    background:
+      linear-gradient(
+        145deg,
+        rgba(25, 53, 143, 0.98),
+        rgba(36, 70, 184, 0.98)
+      );
+
+    border:
+      1px solid rgba(255, 255, 255, 0.12);
+
+    border-top:
+      1px solid rgba(255, 255, 255, 0.18);
+
+    backdrop-filter:
+      blur(18px);
+
+    -webkit-backdrop-filter:
+      blur(18px);
+
+    box-shadow:
+      0 18px 45px rgba(15, 23, 42, 0.25),
+      0 5px 15px rgba(15, 23, 42, 0.14);
+  }
+
+  .admin-mobile-panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -50px;
+    right: 10%;
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 50%;
+
+    background:
+      rgba(147, 197, 253, 0.12);
+
+    filter:
+      blur(10px);
+
+    pointer-events: none;
+  }
+
+
+  .admin-mobile-link {
+    position: relative;
+
+    border:
+      1px solid transparent;
+
+    transition:
+      background-color var(--wb-transition),
+      transform var(--wb-transition),
+      border-color var(--wb-transition);
+  }
+
+  .admin-mobile-link:hover {
+    background:
+      rgba(255, 255, 255, 0.10);
+
+    border-color:
+      rgba(255, 255, 255, 0.08);
+
+    transform:
+      translateX(4px);
+  }
+
+  .admin-mobile-link.active {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.18),
+        rgba(255, 255, 255, 0.07)
+      );
+
+    border-color:
+      rgba(255, 255, 255, 0.12);
+
+    box-shadow:
+      inset 3px 0 0 #93c5fd,
+      0 5px 15px rgba(0, 0, 0, 0.10);
+  }
+}
+
+
+/* =========================================================
+   DARK MODE — PREMIUM
+========================================================= */
+
+.admin-shell.dark {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(37, 99, 235, 0.10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      rgba(59, 130, 246, 0.07),
+      transparent 30%
+    ),
+    #0b1120;
+}
+
+.admin-shell.dark .admin-navbar {
+  background:
+    linear-gradient(
+      135deg,
+      #0b1538 0%,
+      #12265f 48%,
+      #17367d 100%
+    );
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.38);
+}
+
+.admin-shell.dark .admin-nav-links {
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  border-color:
+    rgba(255, 255, 255, 0.07);
+}
+
+.admin-shell.dark .admin-nav-link:hover {
+  background:
+    rgba(255, 255, 255, 0.07);
+}
+
+.admin-shell.dark .admin-nav-link.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(96, 165, 250, 0.18),
+      rgba(59, 130, 246, 0.08)
+    );
+
+  border-color:
+    rgba(96, 165, 250, 0.16);
+}
+
+
+/* =========================================================
+   PAGE CONTENT PREMIUM BACKGROUND
+========================================================= */
+
+.admin-page-content {
+  position: relative;
+
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(59, 130, 246, 0.045),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 100% 20%,
+      rgba(37, 99, 235, 0.035),
+      transparent 25%
+    );
+}
+
+
+/* =========================================================
+   PREMIUM FOCUS STATES
+========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline:
+    3px solid rgba(96, 165, 250, 0.35);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   PREMIUM CARD EFFECT
+   Works with common Tailwind cards
+========================================================= */
+
+.admin-shell .rounded-xl,
+.admin-shell .rounded-2xl {
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 280ms ease;
+}
+
+
+/* Don't move cards aggressively */
+.admin-shell .rounded-xl:hover,
+.admin-shell .rounded-2xl:hover {
+  box-shadow:
+    0 12px 35px rgba(15, 23, 42, 0.09);
+}
+
+
+/* =========================================================
+   DARK CARD SHADOW
+========================================================= */
+
+.admin-shell.dark .rounded-xl:hover,
+.admin-shell.dark .rounded-2xl:hover {
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   PREMIUM SCROLLBAR
+========================================================= */
+
+.admin-shell {
+  scrollbar-width: thin;
+  scrollbar-color:
+    #94a3b8
+    transparent;
+}
+
+.admin-shell::-webkit-scrollbar {
+  width: 7px;
+}
+
+.admin-shell::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-shell::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(
+      180deg,
+      #94a3b8,
+      #64748b
+    );
+
+  border-radius: 999px;
+}
+
+.admin-shell::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #64748b,
+      #475569
+    );
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE PERFORMANCE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .admin-navbar::before,
+  .admin-navbar::after {
+    animation-duration: 12s;
+  }
+
+  .admin-page-content {
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        rgba(59, 130, 246, 0.035),
+        transparent 30%
+      );
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .admin-navbar {
+    box-shadow:
+      0 5px 18px rgba(15, 23, 42, 0.16);
+  }
+
+  .admin-brand {
+    padding: 3px;
+  }
+
+  .admin-brand-logo {
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+}
