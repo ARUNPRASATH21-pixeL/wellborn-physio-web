@@ -94,6 +94,6 @@ coverage/
 
 *.local
 *.local.json
-**/firebase-service-account.json
+
 # **/uploads/
 # **/src/main/resources/uploads/
