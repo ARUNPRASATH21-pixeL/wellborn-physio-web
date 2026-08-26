@@ -97,3 +97,4 @@ coverage/
 
 # **/uploads/
 # **/src/main/resources/uploads/
+firebase-service-account.json
