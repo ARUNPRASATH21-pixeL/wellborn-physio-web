@@ -11,12 +11,12 @@ self.addEventListener('push', function (event) {
     const title = data.title || 'Wellborn Physio';
     const options = {
         body: data.message || 'You have a new notification.',
-        icon: '/assets/wellborn.physio.jpg', // Ungaloda app logo icon path
+        icon: '/assets/wellborn.physio.jpg', 
         badge: '/favicon.ico',
         vibrate: [200, 100, 200],
         tag: 'whatsapp-style-alert',
         renotify: true,
-        requireInteraction: true // WhatsApp mathiri user click panra varaikum screen mela vekkum
+        requireInteraction: true 
     };
 
     event.waitUntil(
