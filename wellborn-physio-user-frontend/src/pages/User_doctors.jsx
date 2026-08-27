@@ -464,15 +464,34 @@ function User_doctors_Inner() {
 
   useEffect(() => {
     let mounted = true;
+    const DOCTORS_CACHE_KEY = "wellborn-doctors-cache";
+
+    // Restore the last successful doctor list immediately on refresh.
+    try {
+      const cachedDoctors = JSON.parse(
+        localStorage.getItem(DOCTORS_CACHE_KEY) || "[]"
+      );
+
+      if (
+        mounted &&
+        Array.isArray(cachedDoctors) &&
+        cachedDoctors.length > 0
+      ) {
+        setDoctors(cachedDoctors);
+        setLoading(false);
+      }
+    } catch (cacheError) {
+      console.warn(
+        "Unable to read doctors cache:",
+        cacheError
+      );
+    }
 
     async function loadDoctors() {
       try {
-        setLoading(true);
-
-        const data =
-          await getData(
-            API.DOCTOR_GET_ALL
-          );
+        const data = await getData(
+          API.DOCTOR_GET_ALL
+        );
 
         console.log(
           "Doctors API Response:",
@@ -486,35 +505,43 @@ function User_doctors_Inner() {
         const doctorList =
           Array.isArray(data)
             ? data
-            : Array.isArray(
-                data?.data
-              )
+            : Array.isArray(data?.data)
             ? data.data
-            : Array.isArray(
-                data?.doctors
-              )
+            : Array.isArray(data?.doctors)
             ? data.doctors
+            : Array.isArray(data?.content)
+            ? data.content
             : [];
 
-        const activeDoctors =
-          doctorList.filter(
-            (doctor) =>
-              doctor?.status !==
-              false
-          );
-
-        setDoctors(
-          activeDoctors
+        const activeDoctors = doctorList.filter(
+          (doctor) => doctor?.status !== false
         );
+
+        // Only replace the visible list when the API returns
+        // a valid non-empty doctor list.
+        if (activeDoctors.length > 0) {
+          setDoctors(activeDoctors);
+
+          try {
+            localStorage.setItem(
+              DOCTORS_CACHE_KEY,
+              JSON.stringify(activeDoctors)
+            );
+          } catch (cacheError) {
+            console.warn(
+              "Unable to save doctors cache:",
+              cacheError
+            );
+          }
+        }
       } catch (error) {
         console.error(
           "Unable to load doctors:",
           error
         );
 
-        if (mounted) {
-          setDoctors([]);
-        }
+        // Keep cached/current doctors visible on a temporary
+        // network/server failure. Never clear them here.
       } finally {
         if (mounted) {
           setLoading(false);
@@ -3594,12 +3621,6 @@ function User_doctors_Inner() {
     </div>
   );
 }
-
-/* =====================================================
-   EXPORT WRAPPED IN ERROR BOUNDARY
-   (FIX: guarantees the page never goes fully blank even
-   if something unexpected happens)
-===================================================== */
 
 export default function User_doctors() {
   return (
