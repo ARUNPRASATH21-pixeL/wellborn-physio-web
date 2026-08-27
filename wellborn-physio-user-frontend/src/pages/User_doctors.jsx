@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API, getData } from "../services/api";
+import { API, getPublicData } from "../services/api";
 import { motion } from "framer-motion";
 
 import {
@@ -470,7 +470,7 @@ function User_doctors_Inner() {
         setLoading(true);
 
         const data =
-          await getData(
+          await getPublicData(
             API.DOCTOR_GET_ALL
           );
 
