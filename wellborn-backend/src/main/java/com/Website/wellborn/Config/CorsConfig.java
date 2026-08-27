@@ -11,77 +11,84 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class CorsConfig {
 
-	// =========================================================
-	// CORS CONFIGURATION
-	// =========================================================
+    // =========================================================
+    // CORS CONFIGURATION
+    // =========================================================
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
 
-		CorsConfiguration configuration = new CorsConfiguration();
+        CorsConfiguration configuration = new CorsConfiguration();
 
-	
-		configuration.setAllowedOrigins(List.of(
-		        "http://localhost:5173",
-		        "http://localhost:5174",
-		        "http://localhost:5175",
-		        "http://localhost:5176",
-		        "http://localhost:3000",
+        // =====================================================
+        // ALLOWED ORIGINS
+        // =====================================================
 
-		        "https://wellborn-physio-admin-frontend.vercel.app",
-		        "https://wellborn-physio-user-frontend.vercel.app"
-		));
+        configuration.setAllowedOrigins(List.of(
+                // Local Development
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://localhost:5175",
+                "http://localhost:5176",
+                "http://localhost:3000",
 
-		// =====================================================
-		// ALLOWED HTTP METHODS
-		// =====================================================
+                // Production - Admin Frontend
+                  "https://wellborn-physio-web.vercel.app",
 
-		configuration.setAllowedMethods(List.of(
-				"GET",
-				"POST",
-				"PUT",
-				"DELETE",
-				"OPTIONS"
-		));
+                // Production - User Frontend
+                "https://wellborn-physio-user.vercel.app"
+        ));
 
-		// =====================================================
-		// ALLOWED REQUEST HEADERS
-		// =====================================================
+        // =====================================================
+        // ALLOWED HTTP METHODS
+        // =====================================================
 
-		configuration.setAllowedHeaders(List.of(
-				"Authorization",
-				"Content-Type",
-				"Accept",
-				"Origin",
-				"X-Requested-With"
-		));
+        configuration.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+        ));
 
-		// =====================================================
-		// EXPOSED RESPONSE HEADERS
-		// =====================================================
+        // =====================================================
+        // ALLOWED REQUEST HEADERS
+        // =====================================================
 
-		configuration.setExposedHeaders(List.of(
-				"Authorization"
-		));
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
 
-		// =====================================================
-		// CREDENTIALS
-		// =====================================================
+        // =====================================================
+        // EXPOSED RESPONSE HEADERS
+        // =====================================================
 
-		configuration.setAllowCredentials(false);
+        configuration.setExposedHeaders(List.of(
+                "Authorization"
+        ));
 
-		// =====================================================
-		// REGISTER CORS CONFIGURATION
-		// =====================================================
+        // =====================================================
+        // CREDENTIALS
+        // =====================================================
 
-		UrlBasedCorsConfigurationSource source =
-				new UrlBasedCorsConfigurationSource();
+        configuration.setAllowCredentials(false);
 
-		source.registerCorsConfiguration(
-				"/**",
-				configuration
-		);
+        // =====================================================
+        // REGISTER CORS CONFIGURATION
+        // =====================================================
 
-		return source;
-	}
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration(
+                "/**",
+                configuration
+        );
+
+        return source;
+    }
 }
