@@ -85,6 +85,53 @@ const isFresherExperience = (experience) => {
 };
 
 /* =====================================================
+   SAFE TAGS HELPER (FIX: tags might not always be an array)
+===================================================== */
+
+const toSafeTagArray = (tags) => {
+  if (Array.isArray(tags)) {
+    return tags.filter((t) => t !== null && t !== undefined && String(t).trim() !== "");
+  }
+  if (typeof tags === "string" && tags.trim() !== "") {
+    return [tags];
+  }
+  return [];
+};
+
+/* =====================================================
+   ERROR BOUNDARY (FIX: prevents entire page from going
+   blank if a doctor card or child component throws)
+===================================================== */
+
+class DoctorsErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("Doctors page render error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="doctor-empty">
+          <Stethoscope size={36} />
+          <h3>Something went wrong</h3>
+          <p>Please refresh the page. If the problem continues, contact support.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+/* =====================================================
    ANIMATION VARIANTS
 ===================================================== */
 
@@ -240,12 +287,14 @@ function DoctorCard({
   index,
 }) {
   const imageUrl = getDoctorImage(
-    doctor.image
+    doctor?.image
   );
 
   const fresher = isFresherExperience(
-    doctor.experience
+    doctor?.experience
   );
+
+  const safeTags = toSafeTagArray(doctor?.tags);
 
   return (
     <motion.article
@@ -267,7 +316,7 @@ function DoctorCard({
       <div className="doctor-compact-image-wrap">
         <motion.img
           src={imageUrl}
-          alt={doctor.name || "Doctor"}
+          alt={doctor?.name || "Doctor"}
           className="doctor-compact-image"
           whileHover={{
             scale: 1.06,
@@ -319,7 +368,7 @@ function DoctorCard({
             className="doctor-compact-exp-badge"
           >
             <Sparkles size={12} className="doctor-exp-sparkle" />
-            <span>{doctor.experience}</span>
+            <span>{doctor?.experience}</span>
           </motion.div>
         )}
 
@@ -334,23 +383,23 @@ function DoctorCard({
       <div className="doctor-compact-content">
         <div className="doctor-compact-top-row">
           <span className="doctor-compact-role-pill">
-            {doctor.role || "Physiotherapist"}
+            {doctor?.role || "Physiotherapist"}
           </span>
           <span className="doctor-compact-status-dot" title="Active Specialist" />
         </div>
 
         <h3 className="doctor-compact-name">
-          {doctor.name || "Doctor"}
+          {doctor?.name || "Doctor"}
         </h3>
 
         {/* MULTI-DECORATED FROSTED DETAIL BOX */}
         <div className="doctor-compact-details-box">
           <p className="doctor-compact-desc">
-            {doctor.description}
+            {doctor?.description}
           </p>
 
           <div className="doctor-compact-tags">
-            {(doctor.tags || []).map((tag, tagIndex) => (
+            {safeTags.map((tag, tagIndex) => (
               <span key={`${tag}-${tagIndex}`}>
                 {tag}
               </span>
@@ -362,7 +411,7 @@ function DoctorCard({
               <ShieldCheck size={14} />
             </div>
             <span>
-              {doctor.qualification || "Professional Qualification"}
+              {doctor?.qualification || "Professional Qualification"}
             </span>
           </div>
         </div>
@@ -402,7 +451,7 @@ function DoctorCard({
    PAGE
 ===================================================== */
 
-export default function User_doctors() {
+function User_doctors_Inner() {
   const [doctors, setDoctors] =
     useState([]);
 
@@ -482,56 +531,73 @@ export default function User_doctors() {
 
   /* ===================================================
      CONVERT API DATA
+     FIX: wrapped in try/catch so a malformed record from
+     the backend cannot crash the whole page. Also uses
+     optional chaining / safe fallbacks everywhere.
   ================================================== */
 
-  const doctorCards =
-    doctors.map((d, index) => ({
-      id:
-        d.doctorId ??
-        d.id ??
-        index,
+  let doctorCards = [];
 
-      name:
-        d.doctorName ||
-        d.name ||
-        "Doctor",
+  try {
+    doctorCards = (Array.isArray(doctors) ? doctors : []).map((d, index) => {
+      try {
+        return {
+          id:
+            d?.doctorId ??
+            d?.id ??
+            `doctor-${index}`,
 
-      role:
-        d.specialization ||
-        "Physiotherapist",
+          name:
+            d?.doctorName ||
+            d?.name ||
+            "Doctor",
 
-      qualification:
-        d.qualification ||
-        "Professional Qualification",
+          role:
+            d?.specialization ||
+            "Physiotherapist",
 
-      experience:
-        d.experience ||
-        "",
+          qualification:
+            d?.qualification ||
+            "Professional Qualification",
 
-      image:
-        d.image ||
-        d.imageUrl ||
-        d.photo ||
-        d.profileImage ||
-        '',
+          experience:
+            d?.experience ||
+            "",
 
-      description: isFresherExperience(d.experience)
-        ? `${
-            d.specialization ||
-            "Physiotherapy"
-          } with dedicated clinical expertise and patient care.`
-        : `${
-            d.specialization ||
-            "Physiotherapy"
-          } with ${
-            d.experience
-          } of professional clinical experience.`,
-      
-      tags: [
-        d.specialization ||
-          "Physiotherapy",
-      ],
-    }));
+          image:
+            d?.image ||
+            d?.imageUrl ||
+            d?.photo ||
+            d?.profileImage ||
+            "",
+
+          description: isFresherExperience(d?.experience)
+            ? `${
+                d?.specialization ||
+                "Physiotherapy"
+              } with dedicated clinical expertise and patient care.`
+            : `${
+                d?.specialization ||
+                "Physiotherapy"
+              } with ${
+                d?.experience
+              } of professional clinical experience.`,
+
+          tags: toSafeTagArray(
+            d?.tags && d.tags.length
+              ? d.tags
+              : [d?.specialization || "Physiotherapy"]
+          ),
+        };
+      } catch (cardError) {
+        console.error("Skipping malformed doctor record:", d, cardError);
+        return null;
+      }
+    }).filter(Boolean);
+  } catch (mapError) {
+    console.error("Failed to process doctors list:", mapError);
+    doctorCards = [];
+  }
 
   /* =====================================================
      SPECIALTIES
@@ -810,8 +876,7 @@ export default function User_doctors() {
                 ) => (
                   <DoctorCard
                     key={
-                      doctor.id ||
-                      doctor.name
+                      doctor.id
                     }
                     doctor={doctor}
                     index={index}
@@ -3527,5 +3592,19 @@ export default function User_doctors() {
       `}</style>
 
     </div>
+  );
+}
+
+/* =====================================================
+   EXPORT WRAPPED IN ERROR BOUNDARY
+   (FIX: guarantees the page never goes fully blank even
+   if something unexpected happens)
+===================================================== */
+
+export default function User_doctors() {
+  return (
+    <DoctorsErrorBoundary>
+      <User_doctors_Inner />
+    </DoctorsErrorBoundary>
   );
 }
