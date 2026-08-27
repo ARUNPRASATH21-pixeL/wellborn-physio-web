@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.resend.Resend;
-import com.resend.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import com.resend.services.emails.model.CreateEmailResponse;
 
@@ -62,6 +61,7 @@ public class EmailServiceImpl {
         validateEmail(to);
 
         if (otp == null || !otp.matches("\\d{6}")) {
+
             throw new IllegalArgumentException(
                     "Invalid password reset OTP"
             );
@@ -104,6 +104,7 @@ public class EmailServiceImpl {
         validateEmail(to);
 
         if (resetLink == null || resetLink.trim().isEmpty()) {
+
             throw new IllegalArgumentException(
                     "Reset link is required"
             );
@@ -118,6 +119,7 @@ public class EmailServiceImpl {
                 <html>
 
                 <head>
+
                     <meta charset="UTF-8">
 
                     <meta name="viewport"
@@ -127,6 +129,7 @@ public class EmailServiceImpl {
                     <title>
                         Wellborn Physio Password Reset
                     </title>
+
                 </head>
 
                 <body style="
@@ -146,6 +149,7 @@ public class EmailServiceImpl {
                        ">
 
                 <tr>
+
                 <td align="center">
 
                 <table width="100%"
@@ -159,9 +163,12 @@ public class EmailServiceImpl {
                            overflow:hidden;
                        ">
 
+                <!-- ========================================= -->
                 <!-- HEADER -->
+                <!-- ========================================= -->
 
                 <tr>
+
                 <td align="center"
                     style="
                         padding:30px 25px 25px;
@@ -199,11 +206,15 @@ public class EmailServiceImpl {
                     </div>
 
                 </td>
+
                 </tr>
 
+                <!-- ========================================= -->
                 <!-- CONTENT -->
+                <!-- ========================================= -->
 
                 <tr>
+
                 <td style="
                     padding:35px;
                 ">
@@ -244,12 +255,15 @@ public class EmailServiceImpl {
                         create a new password.
                     </p>
 
+                    <!-- RESET BUTTON -->
+
                     <table width="100%"
                            cellpadding="0"
                            cellspacing="0"
                            border="0">
 
                     <tr>
+
                     <td align="center">
 
                         <a href="%s"
@@ -267,9 +281,12 @@ public class EmailServiceImpl {
                         </a>
 
                     </td>
+
                     </tr>
 
                     </table>
+
+                    <!-- IMPORTANT -->
 
                     <div style="
                         margin-top:25px;
@@ -288,6 +305,8 @@ public class EmailServiceImpl {
                         and can only be used once.
 
                     </div>
+
+                    <!-- FALLBACK LINK -->
 
                     <p style="
                         margin-top:25px;
@@ -310,6 +329,8 @@ public class EmailServiceImpl {
                         %s
                     </div>
 
+                    <!-- SECURITY NOTICE -->
+
                     <div style="
                         margin-top:25px;
                         padding:15px;
@@ -328,11 +349,15 @@ public class EmailServiceImpl {
                     </div>
 
                 </td>
+
                 </tr>
 
+                <!-- ========================================= -->
                 <!-- FOOTER -->
+                <!-- ========================================= -->
 
                 <tr>
+
                 <td align="center"
                     style="
                         padding:22px 25px 28px;
@@ -344,12 +369,14 @@ public class EmailServiceImpl {
                         font-size:13px;
                         line-height:1.6;
                     ">
+
                         Regards,<br>
 
                         <strong style="color:#334155;">
                             Wellborn Physio
                             Rehab & Centre
                         </strong>
+
                     </div>
 
                     <div style="
@@ -357,21 +384,26 @@ public class EmailServiceImpl {
                         color:#94a3b8;
                         font-size:11px;
                     ">
+
                         This is an automated email.
                         Please do not reply.
+
                     </div>
 
                 </td>
+
                 </tr>
 
                 </table>
 
                 </td>
+
                 </tr>
 
                 </table>
 
                 </body>
+
                 </html>
                 """.formatted(
                         safeResetLink,
@@ -400,6 +432,7 @@ public class EmailServiceImpl {
         validateEmail(to);
 
         if (otp == null || !otp.matches("\\d{6}")) {
+
             throw new IllegalArgumentException(
                     "Invalid verification OTP"
             );
@@ -430,7 +463,7 @@ public class EmailServiceImpl {
     }
 
     // =========================================================
-    // RESEND EMAIL
+    // COMMON RESEND EMAIL METHOD
     // =========================================================
 
     private void sendEmail(
@@ -440,6 +473,10 @@ public class EmailServiceImpl {
             String html
     ) {
 
+        // -----------------------------------------------------
+        // API KEY CHECK
+        // -----------------------------------------------------
+
         if (resendApiKey == null ||
                 resendApiKey.trim().isEmpty()) {
 
@@ -447,6 +484,10 @@ public class EmailServiceImpl {
                     "RESEND_API_KEY is not configured"
             );
         }
+
+        // -----------------------------------------------------
+        // FROM EMAIL CHECK
+        // -----------------------------------------------------
 
         if (fromEmail == null ||
                 fromEmail.trim().isEmpty()) {
@@ -458,18 +499,28 @@ public class EmailServiceImpl {
 
         try {
 
+            // -------------------------------------------------
+            // CREATE RESEND CLIENT
+            // -------------------------------------------------
+
             Resend resend =
-                    new Resend(resendApiKey.trim());
+                    new Resend(
+                            resendApiKey.trim()
+                    );
+
+            // -------------------------------------------------
+            // CREATE EMAIL BUILDER
+            // -------------------------------------------------
 
             CreateEmailOptions.Builder builder =
                     CreateEmailOptions.builder()
-                            .from(fromEmail)
-                            .to(to)
+                            .from(fromEmail.trim())
+                            .to(to.trim().toLowerCase())
                             .subject(subject);
 
-            // =================================================
+            // -------------------------------------------------
             // HTML EMAIL
-            // =================================================
+            // -------------------------------------------------
 
             if (html != null && !html.isBlank()) {
 
@@ -477,32 +528,53 @@ public class EmailServiceImpl {
 
             }
 
-            // =================================================
+            // -------------------------------------------------
             // TEXT EMAIL
-            // =================================================
+            // -------------------------------------------------
 
             else {
 
                 builder.text(
                         text != null ? text : ""
                 );
-
             }
+
+            // -------------------------------------------------
+            // BUILD REQUEST
+            // -------------------------------------------------
 
             CreateEmailOptions params =
                     builder.build();
 
+            // -------------------------------------------------
+            // SEND EMAIL
+            // -------------------------------------------------
+
             CreateEmailResponse response =
                     resend.emails().send(params);
 
-            if (response == null ||
-                    response.getId() == null ||
+            // -------------------------------------------------
+            // VERIFY RESPONSE
+            // -------------------------------------------------
+
+            if (response == null) {
+
+                throw new IllegalStateException(
+                        "Resend returned an empty response"
+                );
+            }
+
+            if (response.getId() == null ||
                     response.getId().isBlank()) {
 
                 throw new IllegalStateException(
                         "Resend did not return an email ID"
                 );
             }
+
+            // -------------------------------------------------
+            // SUCCESS LOG
+            // -------------------------------------------------
 
             System.out.println(
                     "========================================"
@@ -513,38 +585,49 @@ public class EmailServiceImpl {
             );
 
             System.out.println(
-                    "Recipient : " + to
+                    "Recipient : "
+                            + to
             );
 
             System.out.println(
-                    "Resend ID : " + response.getId()
+                    "Resend ID : "
+                            + response.getId()
             );
 
             System.out.println(
                     "========================================"
             );
 
-        } catch (ResendException e) {
+        } catch (Exception e) {
+
+            // -------------------------------------------------
+            // ERROR LOG
+            // -------------------------------------------------
 
             System.err.println(
-                    "Resend email error: "
+                    "========================================"
+            );
+
+            System.err.println(
+                    "RESEND EMAIL ERROR"
+            );
+
+            System.err.println(
+                    "Recipient : "
+                            + to
+            );
+
+            System.err.println(
+                    "Error : "
                             + e.getMessage()
+            );
+
+            System.err.println(
+                    "========================================"
             );
 
             throw new IllegalStateException(
                     "Unable to send email through Resend",
-                    e
-            );
-
-        } catch (Exception e) {
-
-            System.err.println(
-                    "Email sending error: "
-                            + e.getMessage()
-            );
-
-            throw new IllegalStateException(
-                    "Unable to send email",
                     e
             );
         }
