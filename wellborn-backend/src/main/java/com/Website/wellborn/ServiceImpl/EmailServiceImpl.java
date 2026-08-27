@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.resend.Resend;
 import com.resend.ResendException;
-import com.resend.services.emails.model.CreateEmailOptions;
-import com.resend.services.emails.model.CreateEmailResponse;
+import com.resend.SendEmailRequest;
+import com.resend.SendEmailResponse;
 
 @Service
 public class EmailServiceImpl {
@@ -59,12 +59,12 @@ public class EmailServiceImpl {
 
     public void sendAdminPasswordResetOtp(String to, String otp) {
 
-        if (to == null || to.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email address is required");
-        }
+        validateEmail(to);
 
         if (otp == null || !otp.matches("\\d{6}")) {
-            throw new IllegalArgumentException("Invalid password reset OTP");
+            throw new IllegalArgumentException(
+                    "Invalid password reset OTP"
+            );
         }
 
         String email = to.trim().toLowerCase();
@@ -73,19 +73,14 @@ public class EmailServiceImpl {
                 "Hello,\n\n"
                 + "We received a request to reset your "
                 + "Wellborn Physio admin account password.\n\n"
-
                 + "Your password reset OTP is: "
                 + otp
                 + "\n\n"
-
                 + "This OTP expires in 5 minutes.\n"
                 + "You have a maximum of 5 attempts.\n\n"
-
                 + "Never share this OTP with anyone.\n\n"
-
                 + "If you did not request a password reset, "
                 + "you can safely ignore this email.\n\n"
-
                 + "Regards,\n"
                 + "Wellborn Physio Rehab & Centre";
 
@@ -106,12 +101,12 @@ public class EmailServiceImpl {
             String resetLink
     ) {
 
-        if (to == null || to.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email address is required");
-        }
+        validateEmail(to);
 
         if (resetLink == null || resetLink.trim().isEmpty()) {
-            throw new IllegalArgumentException("Reset link is required");
+            throw new IllegalArgumentException(
+                    "Reset link is required"
+            );
         }
 
         String email = to.trim().toLowerCase();
@@ -402,11 +397,7 @@ public class EmailServiceImpl {
             String intro
     ) {
 
-        if (to == null || to.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Email address is required"
-            );
-        }
+        validateEmail(to);
 
         if (otp == null || !otp.matches("\\d{6}")) {
             throw new IllegalArgumentException(
@@ -420,18 +411,13 @@ public class EmailServiceImpl {
                 "Hello,\n\n"
                 + intro
                 + "\n\n"
-
                 + "Your verification OTP is: "
                 + otp
                 + "\n\n"
-
                 + "This OTP expires in 5 minutes.\n"
-
                 + "Never share this OTP with anyone.\n\n"
-
                 + "If you did not request this, "
                 + "you can safely ignore this email.\n\n"
-
                 + "Regards,\n"
                 + "Wellborn Physio Rehab & Centre";
 
@@ -444,7 +430,7 @@ public class EmailServiceImpl {
     }
 
     // =========================================================
-    // COMMON RESEND EMAIL METHOD
+    // RESEND EMAIL
     // =========================================================
 
     private void sendEmail(
@@ -472,30 +458,42 @@ public class EmailServiceImpl {
 
         try {
 
-            Resend resend = new Resend(
-                    resendApiKey.trim()
-            );
+            Resend resend =
+                    new Resend(resendApiKey.trim());
 
-            CreateEmailOptions.Builder builder =
-                    CreateEmailOptions.builder()
+            SendEmailRequest.Builder builder =
+                    SendEmailRequest.builder()
                             .from(fromEmail)
                             .to(to)
                             .subject(subject);
+
+            // =================================================
+            // HTML EMAIL
+            // =================================================
 
             if (html != null && !html.isBlank()) {
 
                 builder.html(html);
 
-            } else {
-
-                builder.text(text);
             }
 
-            CreateEmailOptions params =
+            // =================================================
+            // PLAIN TEXT EMAIL
+            // =================================================
+
+            else {
+
+                builder.text(
+                        text != null ? text : ""
+                );
+
+            }
+
+            SendEmailRequest request =
                     builder.build();
 
-            CreateEmailResponse response =
-                    resend.emails().send(params);
+            SendEmailResponse response =
+                    resend.emails().send(request);
 
             if (response == null ||
                     response.getId() == null ||
@@ -507,16 +505,32 @@ public class EmailServiceImpl {
             }
 
             System.out.println(
-                    "Wellborn email sent successfully. "
-                    + "Resend ID: "
-                    + response.getId()
+                    "========================================"
             );
 
-        } catch (ResendException e) {
+            System.out.println(
+                    "Wellborn email sent successfully"
+            );
+
+            System.out.println(
+                    "Resend ID: " + response.getId()
+            );
+
+            System.out.println(
+                    "Recipient: " + to
+            );
+
+            System.out.println(
+                    "========================================"
+            );
+
+        }
+
+        catch (ResendException e) {
 
             System.err.println(
                     "Resend email error: "
-                    + e.getMessage()
+                            + e.getMessage()
             );
 
             throw new IllegalStateException(
@@ -524,16 +538,33 @@ public class EmailServiceImpl {
                     e
             );
 
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
 
             System.err.println(
                     "Email sending error: "
-                    + e.getMessage()
+                            + e.getMessage()
             );
 
             throw new IllegalStateException(
                     "Unable to send email",
                     e
+            );
+        }
+    }
+
+    // =========================================================
+    // EMAIL VALIDATION
+    // =========================================================
+
+    private void validateEmail(String email) {
+
+        if (email == null ||
+                email.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Email address is required"
             );
         }
     }
