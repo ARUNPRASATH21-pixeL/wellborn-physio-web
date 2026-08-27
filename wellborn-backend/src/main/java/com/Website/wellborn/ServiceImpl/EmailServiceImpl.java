@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.resend.Resend;
 import com.resend.ResendException;
-import com.resend.SendEmailRequest;
-import com.resend.SendEmailResponse;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
 
 @Service
 public class EmailServiceImpl {
@@ -19,7 +19,7 @@ public class EmailServiceImpl {
     private String resendApiKey;
 
     // =========================================================
-    // FROM EMAIL
+    // RESEND FROM EMAIL
     // =========================================================
 
     @Value("${resend.from.email:onboarding@resend.dev}")
@@ -461,8 +461,8 @@ public class EmailServiceImpl {
             Resend resend =
                     new Resend(resendApiKey.trim());
 
-            SendEmailRequest.Builder builder =
-                    SendEmailRequest.builder()
+            CreateEmailOptions.Builder builder =
+                    CreateEmailOptions.builder()
                             .from(fromEmail)
                             .to(to)
                             .subject(subject);
@@ -478,7 +478,7 @@ public class EmailServiceImpl {
             }
 
             // =================================================
-            // PLAIN TEXT EMAIL
+            // TEXT EMAIL
             // =================================================
 
             else {
@@ -489,11 +489,11 @@ public class EmailServiceImpl {
 
             }
 
-            SendEmailRequest request =
+            CreateEmailOptions params =
                     builder.build();
 
-            SendEmailResponse response =
-                    resend.emails().send(request);
+            CreateEmailResponse response =
+                    resend.emails().send(params);
 
             if (response == null ||
                     response.getId() == null ||
@@ -509,24 +509,22 @@ public class EmailServiceImpl {
             );
 
             System.out.println(
-                    "Wellborn email sent successfully"
+                    "WELLBORN EMAIL SENT SUCCESSFULLY"
             );
 
             System.out.println(
-                    "Resend ID: " + response.getId()
+                    "Recipient : " + to
             );
 
             System.out.println(
-                    "Recipient: " + to
+                    "Resend ID : " + response.getId()
             );
 
             System.out.println(
                     "========================================"
             );
 
-        }
-
-        catch (ResendException e) {
+        } catch (ResendException e) {
 
             System.err.println(
                     "Resend email error: "
@@ -538,9 +536,7 @@ public class EmailServiceImpl {
                     e
             );
 
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
 
             System.err.println(
                     "Email sending error: "
