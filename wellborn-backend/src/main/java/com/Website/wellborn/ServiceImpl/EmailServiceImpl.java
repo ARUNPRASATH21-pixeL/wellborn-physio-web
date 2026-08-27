@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.resend.Resend;
+import com.resend.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import com.resend.services.emails.model.CreateEmailResponse;
 
@@ -11,25 +12,18 @@ import com.resend.services.emails.model.CreateEmailResponse;
 public class EmailServiceImpl {
 
     // =========================================================
-    // RESEND CONFIGURATION
+    // RESEND API KEY
     // =========================================================
 
-    private final Resend resend;
+    @Value("${resend.api.key}")
+    private String resendApiKey;
 
-    @Value("${resend.from.email}")
+    // =========================================================
+    // FROM EMAIL
+    // =========================================================
+
+    @Value("${resend.from.email:onboarding@resend.dev}")
     private String fromEmail;
-
-    public EmailServiceImpl(
-            @Value("${resend.api.key}") String resendApiKey) {
-
-        if (resendApiKey == null || resendApiKey.trim().isEmpty()) {
-            throw new IllegalStateException(
-                    "RESEND_API_KEY is not configured"
-            );
-        }
-
-        this.resend = new Resend(resendApiKey);
-    }
 
     // =========================================================
     // ADMIN SIGNUP OTP
@@ -49,9 +43,7 @@ public class EmailServiceImpl {
     // APPOINTMENT OTP
     // =========================================================
 
-    public void sendAppointmentEmailVerificationOtp(
-            String to,
-            String otp) {
+    public void sendAppointmentEmailVerificationOtp(String to, String otp) {
 
         sendOtpEmail(
                 to,
@@ -65,12 +57,15 @@ public class EmailServiceImpl {
     // ADMIN FORGOT PASSWORD OTP
     // =========================================================
 
-    public void sendAdminPasswordResetOtp(
-            String to,
-            String otp) {
+    public void sendAdminPasswordResetOtp(String to, String otp) {
 
-        validateEmail(to);
-        validateOtp(otp);
+        if (to == null || to.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email address is required");
+        }
+
+        if (otp == null || !otp.matches("\\d{6}")) {
+            throw new IllegalArgumentException("Invalid password reset OTP");
+        }
 
         String email = to.trim().toLowerCase();
 
@@ -78,21 +73,27 @@ public class EmailServiceImpl {
                 "Hello,\n\n"
                 + "We received a request to reset your "
                 + "Wellborn Physio admin account password.\n\n"
+
                 + "Your password reset OTP is: "
                 + otp
                 + "\n\n"
+
                 + "This OTP expires in 5 minutes.\n"
                 + "You have a maximum of 5 attempts.\n\n"
+
                 + "Never share this OTP with anyone.\n\n"
+
                 + "If you did not request a password reset, "
                 + "you can safely ignore this email.\n\n"
+
                 + "Regards,\n"
                 + "Wellborn Physio Rehab & Centre";
 
-        sendTextEmail(
+        sendEmail(
                 email,
                 "Wellborn Physio - Password Reset OTP",
-                text
+                text,
+                null
         );
     }
 
@@ -102,26 +103,31 @@ public class EmailServiceImpl {
 
     public void sendAdminPasswordResetEmail(
             String to,
-            String resetLink) {
+            String resetLink
+    ) {
 
-        validateEmail(to);
+        if (to == null || to.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email address is required");
+        }
 
         if (resetLink == null || resetLink.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Reset link is required"
-            );
+            throw new IllegalArgumentException("Reset link is required");
         }
 
         String email = to.trim().toLowerCase();
-        String safeLink = escapeHtml(resetLink);
+
+        String safeResetLink = escapeHtml(resetLink);
 
         String html = """
                 <!DOCTYPE html>
                 <html>
+
                 <head>
                     <meta charset="UTF-8">
+
                     <meta name="viewport"
-                          content="width=device-width, initial-scale=1.0">
+                          content="width=device-width,
+                          initial-scale=1.0">
 
                     <title>
                         Wellborn Physio Password Reset
@@ -203,7 +209,9 @@ public class EmailServiceImpl {
                 <!-- CONTENT -->
 
                 <tr>
-                <td style="padding:35px;">
+                <td style="
+                    padding:35px;
+                ">
 
                     <h1 style="
                         margin:0 0 10px;
@@ -278,10 +286,12 @@ public class EmailServiceImpl {
                         font-size:13px;
                         line-height:1.6;
                     ">
+
                         <strong>Important:</strong>
                         This password reset link expires in
                         <strong>10 minutes</strong>
                         and can only be used once.
+
                     </div>
 
                     <p style="
@@ -315,9 +325,11 @@ public class EmailServiceImpl {
                         font-size:13px;
                         line-height:1.6;
                     ">
+
                         <strong>Security notice:</strong>
                         If you did not request a password reset,
                         you can safely ignore this email.
+
                     </div>
 
                 </td>
@@ -367,13 +379,14 @@ public class EmailServiceImpl {
                 </body>
                 </html>
                 """.formatted(
-                        safeLink,
-                        safeLink
+                        safeResetLink,
+                        safeResetLink
                 );
 
-        sendHtmlEmail(
+        sendEmail(
                 email,
                 "Wellborn Physio - Reset Your Admin Password",
+                null,
                 html
         );
     }
@@ -386,10 +399,20 @@ public class EmailServiceImpl {
             String to,
             String otp,
             String subject,
-            String intro) {
+            String intro
+    ) {
 
-        validateEmail(to);
-        validateOtp(otp);
+        if (to == null || to.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Email address is required"
+            );
+        }
+
+        if (otp == null || !otp.matches("\\d{6}")) {
+            throw new IllegalArgumentException(
+                    "Invalid verification OTP"
+            );
+        }
 
         String email = to.trim().toLowerCase();
 
@@ -397,121 +420,120 @@ public class EmailServiceImpl {
                 "Hello,\n\n"
                 + intro
                 + "\n\n"
+
                 + "Your verification OTP is: "
                 + otp
                 + "\n\n"
+
                 + "This OTP expires in 5 minutes.\n"
+
                 + "Never share this OTP with anyone.\n\n"
+
                 + "If you did not request this, "
                 + "you can safely ignore this email.\n\n"
+
                 + "Regards,\n"
                 + "Wellborn Physio Rehab & Centre";
 
-        sendTextEmail(
+        sendEmail(
                 email,
                 subject,
-                text
+                text,
+                null
         );
     }
 
     // =========================================================
-    // SEND TEXT EMAIL
+    // COMMON RESEND EMAIL METHOD
     // =========================================================
 
-    private void sendTextEmail(
+    private void sendEmail(
             String to,
             String subject,
-            String text) {
+            String text,
+            String html
+    ) {
+
+        if (resendApiKey == null ||
+                resendApiKey.trim().isEmpty()) {
+
+            throw new IllegalStateException(
+                    "RESEND_API_KEY is not configured"
+            );
+        }
+
+        if (fromEmail == null ||
+                fromEmail.trim().isEmpty()) {
+
+            throw new IllegalStateException(
+                    "Resend sender email is not configured"
+            );
+        }
 
         try {
 
-            CreateEmailOptions email =
+            Resend resend = new Resend(
+                    resendApiKey.trim()
+            );
+
+            CreateEmailOptions.Builder builder =
                     CreateEmailOptions.builder()
                             .from(fromEmail)
                             .to(to)
-                            .subject(subject)
-                            .text(text)
-                            .build();
+                            .subject(subject);
+
+            if (html != null && !html.isBlank()) {
+
+                builder.html(html);
+
+            } else {
+
+                builder.text(text);
+            }
+
+            CreateEmailOptions params =
+                    builder.build();
 
             CreateEmailResponse response =
-                    resend.emails().send(email);
+                    resend.emails().send(params);
 
-            if (response == null) {
+            if (response == null ||
+                    response.getId() == null ||
+                    response.getId().isBlank()) {
+
                 throw new IllegalStateException(
-                        "Resend returned an empty response"
+                        "Resend did not return an email ID"
                 );
             }
 
-        } catch (Exception e) {
+            System.out.println(
+                    "Wellborn email sent successfully. "
+                    + "Resend ID: "
+                    + response.getId()
+            );
+
+        } catch (ResendException e) {
+
+            System.err.println(
+                    "Resend email error: "
+                    + e.getMessage()
+            );
 
             throw new IllegalStateException(
                     "Unable to send email through Resend",
                     e
             );
-        }
-    }
-
-    // =========================================================
-    // SEND HTML EMAIL
-    // =========================================================
-
-    private void sendHtmlEmail(
-            String to,
-            String subject,
-            String html) {
-
-        try {
-
-            CreateEmailOptions email =
-                    CreateEmailOptions.builder()
-                            .from(fromEmail)
-                            .to(to)
-                            .subject(subject)
-                            .html(html)
-                            .build();
-
-            CreateEmailResponse response =
-                    resend.emails().send(email);
-
-            if (response == null) {
-                throw new IllegalStateException(
-                        "Resend returned an empty response"
-                );
-            }
 
         } catch (Exception e) {
 
+            System.err.println(
+                    "Email sending error: "
+                    + e.getMessage()
+            );
+
             throw new IllegalStateException(
-                    "Unable to send email through Resend",
+                    "Unable to send email",
                     e
-            );
-        }
-    }
-
-    // =========================================================
-    // EMAIL VALIDATION
-    // =========================================================
-
-    private void validateEmail(String email) {
-
-        if (email == null || email.trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Email address is required"
-            );
-        }
-    }
-
-    // =========================================================
-    // OTP VALIDATION
-    // =========================================================
-
-    private void validateOtp(String otp) {
-
-        if (otp == null || !otp.matches("\\d{6}")) {
-
-            throw new IllegalArgumentException(
-                    "Invalid verification OTP"
             );
         }
     }
